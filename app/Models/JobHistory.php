@@ -43,6 +43,7 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Query\Builder|JobHistory withTrashed()
  * @method static \Illuminate\Database\Query\Builder|JobHistory withoutTrashed()
  * @mixin Eloquent
+ * @method static Builder|JobHistory whereRangeDate($start_date, $end_date)
  */
 class JobHistory extends Model
 {
@@ -75,5 +76,10 @@ class JobHistory extends Model
     public function position(): BelongsTo
     {
         return $this->belongsTo(Position::class);
+    }
+
+    public function scopeWhereRangeDate($query, $start_date, $end_date)
+    {
+        return $query->where('start_date', '<=', $start_date)->where('end_date', '>=', $end_date);
     }
 }

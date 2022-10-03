@@ -18,6 +18,8 @@ use App\Services\Department\DepartmentService;
 use App\Services\Department\DepartmentServiceInterface;
 use App\Services\Employee\EmployeeService;
 use App\Services\Employee\EmployeeServiceInterface;
+use App\Services\JobHistory\JobHistoryService;
+use App\Services\JobHistory\JobHistoryServiceInterface;
 use App\Services\Position\PositionService;
 use App\Services\Position\PositionServiceInterface;
 use Illuminate\Support\ServiceProvider;
@@ -40,6 +42,7 @@ class RepositoryServiceProvider extends ServiceProvider
         //service
         $this->app->bind(DepartmentServiceInterface::class, DepartmentService::class);
         $this->app->bind(PositionServiceInterface::class, PositionService::class);
+        $this->app->bind(JobHistoryServiceInterface::class, JobHistoryService::class);
         $this->app->bind(EmployeeServiceInterface::class, EmployeeService::class);
         $this->app->bind(AuthServiceInterface::class, AuthService::class);
     }

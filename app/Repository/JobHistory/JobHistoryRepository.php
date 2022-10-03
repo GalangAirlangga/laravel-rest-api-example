@@ -3,6 +3,7 @@
 namespace App\Repository\JobHistory;
 
 use App\Models\JobHistory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class JobHistoryRepository implements JobHistoryRepositoryInterface
@@ -29,9 +30,9 @@ class JobHistoryRepository implements JobHistoryRepositoryInterface
 
     /**
      * @param int $id
-     * @return JobHistory
+     * @return Builder|JobHistory
      */
-    public function getByEmployeeId(int $id): JobHistory
+    public function getByEmployeeId(int $id): Builder|JobHistory
     {
         $jobHistoryData = $this->model::where('employee_id', '=', $id);
         if (!$jobHistoryData) {
@@ -70,5 +71,16 @@ class JobHistoryRepository implements JobHistoryRepositoryInterface
         $jobHistoryData = $this->getById($id);
         $jobHistoryData->delete();
         return $jobHistoryData;
+    }
+
+    /**
+     * @param int $id
+     * @param $start_date
+     * @param $end_date
+     * @return Builder|JobHistory
+     */
+    public function getCurrentJob(int $id, $start_date, $end_date): Builder|JobHistory
+    {
+        return $this->getByEmployeeId($id)->whereRangeDate($start_date, $end_date);
     }
 }
