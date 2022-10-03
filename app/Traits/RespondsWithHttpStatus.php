@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Traits;
 
 use Illuminate\Contracts\Foundation\Application;
@@ -24,11 +25,11 @@ trait RespondsWithHttpStatus
         ], $status);
     }
 
-    protected function failureValidation($message,$data, $status = 400): Response|Application|ResponseFactory
+    protected function failureValidation($message, $data, $status = 400): Response|Application|ResponseFactory
     {
         return response([
             'success' => false,
-            'data'=>$data,
+            'errors' => $data,
             'message' => $message,
         ], $status);
     }

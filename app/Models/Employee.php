@@ -69,7 +69,7 @@ class Employee extends Model
         'position_id'
     ];
 
-    protected $hidden=[
+    protected $hidden = [
         'created_at',
         'updated_at',
         'deleted_at'
@@ -89,6 +89,7 @@ class Employee extends Model
     {
         return $this->belongsTo(Department::class);
     }
+
     /**
      * Scope a query
      *
@@ -98,12 +99,10 @@ class Employee extends Model
     public function scopeWithPositionAndDepartment(Builder $query): Builder
     {
         return $query->leftJoin("departments", function ($join) {
-        $join->on("departments.id", "=", "employees.department_id");
-    })
-        ->leftJoin("positions", function ($join) {
+            $join->on("departments.id", "=", "employees.department_id");
+        })->leftJoin("positions", function ($join) {
             $join->on("employees.position_id", "=", "positions.id");
-        })
-        ->select([
+        })->select([
             "employees.id",
             "employees.first_name",
             "employees.last_name",
