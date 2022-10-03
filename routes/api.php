@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\JobHistoriesController;
 use App\Http\Controllers\PositionController;
 use Illuminate\Support\Facades\Route;
 
@@ -39,6 +40,12 @@ Route::prefix('v1')->group(function () {
             Route::post('/', 'store')->middleware(['ability:position-create']);
             Route::put('/{id}', 'update')->middleware(['ability:position-edit'])->where('id', '[0-9]+');
             Route::delete('/{id}', 'destroy')->middleware(['ability:position-delete'])->where('id', '[0-9]+');
+        });
+        Route::controller(JobHistoriesController::class)->prefix('jobs-history')->group(function () {
+            Route::post('/', 'store');
+            Route::get('/{idEmployee}/employee', 'show');
+            Route::put('/{id}', 'update');
+            Route::delete('/{id}', 'destroy');
         });
         Route::controller(EmployeeController::class)->prefix('employees')->group(function () {
             Route::get('/', 'index')->middleware(['ability:employee-index']);
