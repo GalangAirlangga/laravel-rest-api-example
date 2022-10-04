@@ -24,7 +24,7 @@ class AuthRepository implements AuthRepositoryInterface
      * @param $auth
      * @return bool
      */
-    public function logout($auth):bool
+    public function logout($auth): bool
     {
         return $auth->user()->currentAccessToken()->delete();
     }
@@ -35,7 +35,7 @@ class AuthRepository implements AuthRepositoryInterface
      */
     public function user(): User|Authenticatable|null
     {
-       return Auth::user();
+        return Auth::user();
     }
 
     /**
@@ -45,7 +45,7 @@ class AuthRepository implements AuthRepositoryInterface
      */
     public function checkUser($auth): User|null
     {
-       return User::whereEmail($auth['email'])->first();
+        return User::whereEmail($auth['email'])->first();
     }
 
     /**
@@ -69,7 +69,11 @@ class AuthRepository implements AuthRepositoryInterface
             'employee-edit',
             'employee-index',
             'employee-show',
-            'employee-delete'
+            'employee-delete',
+            'jobHistory-show',
+            'jobHistory-create',
+            'jobHistory-update',
+            'jobHistory-delete'
         );
     }
 

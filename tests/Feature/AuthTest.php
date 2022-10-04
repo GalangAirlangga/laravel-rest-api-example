@@ -41,7 +41,7 @@ class AuthTest extends TestCase
         ]);
         $response->assertJson([
             'success' => false,
-            'data' => array(
+            'errors' => array(
                 "email" => [
                     "The email field is required."
                 ]
@@ -49,6 +49,7 @@ class AuthTest extends TestCase
             'message' => 'Validation error'
         ]);
     }
+
     public function testNotValidEmailLogin(): void
     {
 
@@ -58,7 +59,7 @@ class AuthTest extends TestCase
         ]);
         $response->assertJson([
             'success' => false,
-            'data' => array(
+            'errors' => array(
                 "email" => [
                     "The email must be a valid email address."
                 ]
@@ -66,6 +67,7 @@ class AuthTest extends TestCase
             'message' => 'Validation error'
         ]);
     }
+
     public function testNotFoundEmailLogin(): void
     {
 
@@ -78,6 +80,7 @@ class AuthTest extends TestCase
             'message' => 'Account could not be found'
         ]);
     }
+
     public function testRequiredPasswordLogin(): void
     {
 
@@ -87,7 +90,7 @@ class AuthTest extends TestCase
         ]);
         $response->assertJson([
             'success' => false,
-            'data' => array(
+            'errors' => array(
                 "password" => [
                     "The password field is required."
                 ]
@@ -95,6 +98,7 @@ class AuthTest extends TestCase
             'message' => 'Validation error'
         ]);
     }
+
     public function testPasswordNotValidLogin(): void
     {
         $user = User::factory()->create();

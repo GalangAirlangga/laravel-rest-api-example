@@ -42,10 +42,10 @@ Route::prefix('v1')->group(function () {
             Route::delete('/{id}', 'destroy')->middleware(['ability:position-delete'])->where('id', '[0-9]+');
         });
         Route::controller(JobHistoriesController::class)->prefix('jobs-history')->group(function () {
-            Route::post('/', 'store');
-            Route::get('/{idEmployee}/employee', 'show');
-            Route::put('/{id}', 'update');
-            Route::delete('/{id}', 'destroy');
+            Route::post('/', 'store')->middleware(['ability:jobHistory-create']);
+            Route::get('/{idEmployee}/employee', 'show')->middleware(['ability:jobHistory-show'])->where('id', '[0-9]+');
+            Route::put('/{id}', 'update')->middleware(['ability:jobHistory-update'])->where('id', '[0-9]+');
+            Route::delete('/{id}', 'destroy')->middleware(['ability:jobHistory-delete'])->where('id', '[0-9]+');
         });
         Route::controller(EmployeeController::class)->prefix('employees')->group(function () {
             Route::get('/', 'index')->middleware(['ability:employee-index']);
