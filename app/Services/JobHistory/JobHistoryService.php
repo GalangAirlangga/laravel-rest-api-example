@@ -7,6 +7,7 @@ use App\Repository\Employee\EmployeeRepositoryInterface;
 use App\Repository\JobHistory\JobHistoryRepositoryInterface;
 use DB;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 use Throwable;
@@ -24,14 +25,14 @@ class JobHistoryService implements JobHistoryServiceInterface
 
     /**
      * @param int $idEmployee
-     * @return JobHistory|Builder
+     * @return JobHistory|Builder|Collection
      * @throws Throwable
      */
-    public function getByEmployee(int $idEmployee): Builder|JobHistory
+    public function getByEmployee(int $idEmployee): Builder|JobHistory|Collection
     {
         DB::beginTransaction();
         try {
-            $jobsHistory = $this->jobHistoryRepository->getByEmployeeId($idEmployee);
+            $jobsHistory = $this->jobHistoryRepository->getByEmployeeId($idEmployee)->get();
             DB::commit();
             return $jobsHistory;
         } catch (Throwable $exception) {

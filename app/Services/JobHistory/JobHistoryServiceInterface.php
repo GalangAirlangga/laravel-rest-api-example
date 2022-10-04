@@ -4,10 +4,11 @@ namespace App\Services\JobHistory;
 
 use App\Models\JobHistory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 interface JobHistoryServiceInterface
 {
-    public function getByEmployee(int $idEmployee): Builder|JobHistory;
+    public function getByEmployee(int $idEmployee): Builder|JobHistory|Collection;
 
     public function create(array $job): JobHistory;
 

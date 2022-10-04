@@ -82,8 +82,8 @@ class JobHistoriesController extends Controller
     public function destroy($id)
     {
         try {
-            $job = $this->jobHistoryService->delete($id);
-            return $this->success('successfully delete job history data', $job);
+            $this->jobHistoryService->delete($id);
+            return $this->success('successfully delete job history data', []);
         } catch (InvalidArgumentException $exception) {
             Log::error('job history delete : ' . $exception->getMessage());
             return $this->failure($exception->getMessage(), 400);
