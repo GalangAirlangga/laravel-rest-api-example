@@ -6,6 +6,7 @@ use App\Models\Department;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
+use Str;
 use Tests\TestCase;
 
 class DepartmentTest extends TestCase
@@ -59,6 +60,74 @@ class DepartmentTest extends TestCase
             ]);
         $this->assertDatabaseHas('departments', [
             'name' => 'Database Administrator',
+        ]);
+    }
+
+    public function testCreateDataRequiredName(): void
+    {
+        Sanctum::actingAs(
+            User::factory()->create(),
+            ['department-create']
+        );
+        $response = $this->postJson('/api/v1/departments', [
+            'name' => '',
+            'description' => 'Database Administrator',
+        ]);
+
+        $response->assertStatus(400)
+            ->assertJson([
+                'success' => false,
+                'errors' => array(
+                    "name" => array(
+                        "The name must be a string.",
+                        "The name field is required."
+                    )
+                ),
+                'message' => "Validation error"
+            ]);
+    }
+
+    public function testCreateDataNameMoreOverValidation(): void
+    {
+        Sanctum::actingAs(
+            User::factory()->create(),
+            ['department-create']
+        );
+        $response = $this->postJson('/api/v1/departments', [
+            'name' => Str::random(300),
+            'description' => 'Database Administrator',
+        ]);
+
+        $response->assertStatus(400)
+            ->assertJson([
+                'success' => false,
+                'errors' => array(
+                    "name" => array(
+                        "The name must not be greater than 255 characters."
+                    )
+                ),
+                'message' => "Validation error"
+            ]);
+    }
+
+    public function testCreateDataEmptyDescription(): void
+    {
+        Sanctum::actingAs(
+            User::factory()->create(),
+            ['department-create']
+        );
+        $response = $this->postJson('/api/v1/departments', [
+            'name' => 'UI / UX',
+        ]);
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+                'data' => array(),
+                'message' => "successfully created department data"
+            ]);
+        $this->assertDatabaseHas('departments', [
+            'name' => 'UI / UX',
         ]);
     }
 
