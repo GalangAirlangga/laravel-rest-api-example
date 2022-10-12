@@ -5,12 +5,13 @@ namespace App\Repository\Employee;
 use App\Models\Employee;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 interface EmployeeRepositoryInterface
 {
     public function all(): Employee|Builder;
 
-    public function allWithFilter(): Collection|array;
+    public function allWithFilter(): Collection|array|LengthAwarePaginator;
 
     public function getById(int $id): Employee|Builder;
 

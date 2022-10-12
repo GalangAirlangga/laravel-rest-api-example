@@ -6,6 +6,7 @@ use App\Models\Employee;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -81,9 +82,9 @@ class EmployeeRepository implements EmployeeRepositoryInterface
     }
 
     /**
-     * @return Collection|array
+     * @return Collection|array|LengthAwarePaginator
      */
-    public function allWithFilter(): Collection|array
+    public function allWithFilter(): Collection|array|LengthAwarePaginator
     {
 
         return QueryBuilder::for($this->all())
@@ -97,6 +98,6 @@ class EmployeeRepository implements EmployeeRepositoryInterface
             ])
             ->defaultSort('-employees.id')
             ->allowedSorts('first_name', 'employees.id', 'hire_date', 'salary')
-            ->get();
+            ->paginate();
     }
 }

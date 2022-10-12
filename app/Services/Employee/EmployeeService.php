@@ -5,9 +5,11 @@ namespace App\Services\Employee;
 use App\Models\Employee;
 use App\Repository\Employee\EmployeeRepositoryInterface;
 use App\Repository\JobHistory\JobHistoryRepositoryInterface;
+use App\Traits\Helper;
 use DB;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Pagination\LengthAwarePaginator;
 use InvalidArgumentException;
 use Log;
 use Spatie\QueryBuilder\Exceptions\InvalidSortQuery;
@@ -15,6 +17,7 @@ use Throwable;
 
 class EmployeeService implements EmployeeServiceInterface
 {
+    use Helper;
     private EmployeeRepositoryInterface $employeeRepository;
     private JobHistoryRepositoryInterface $jobHistoryRepository;
 
@@ -26,14 +29,14 @@ class EmployeeService implements EmployeeServiceInterface
 
 
     /**
-     * @return Collection|array
+     * @return Collection|array|LengthAwarePaginator
      * @throws Throwable
      */
-    public function all(): Collection|array
+    public function all(): Collection|array|LengthAwarePaginator
     {
         DB::beginTransaction();
         try {
-            $employee = $this->employeeRepository->allWithFilter();
+            $employee = $this->toPagination($this->employeeRepository->allWithFilter());
             DB::commit();
             return $employee;
         } catch (InvalidSortQuery $exception) {

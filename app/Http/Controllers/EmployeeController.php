@@ -32,7 +32,7 @@ class EmployeeController extends Controller
             $employee = Cache::remember('employee-all', 60, function () {
                 return $this->employeeService->all();
             });
-            return $this->success('data all employee', $employee);
+            return $this->successWithPaginate('data all employee', $employee);
         } catch (InvalidSortQuery $exception) {
             return $this->failure($exception->getMessage(), 400);
         } catch (Throwable $exception) {
