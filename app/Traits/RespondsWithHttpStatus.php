@@ -17,6 +17,16 @@ trait RespondsWithHttpStatus
         ], $status);
     }
 
+    protected function successWithPaginate($message, $data = [], $status = 200): Response|Application|ResponseFactory
+    {
+        return response([
+            'success' => true,
+            'data' => $data['data'],
+            'page'=>$data['paginate'],
+            'message' => $message,
+        ], $status);
+    }
+
     protected function failure($message, $status = 422): Response|Application|ResponseFactory
     {
         return response([
