@@ -75,6 +75,8 @@ class DepartmentController extends Controller
         try {
             $department = $this->departmentService->update($id, $validatedData);
             return $this->success('successfully update department data', $department);
+        } catch (ModelNotFoundException $exception) {
+            return $this->failure($exception->getMessage(), 404);
         } catch (Throwable $exception) {
             Log::error('department update : ' . $exception->getMessage());
             return $this->failure('error update department', 400);

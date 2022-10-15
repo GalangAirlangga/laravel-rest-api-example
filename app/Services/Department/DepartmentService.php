@@ -100,6 +100,8 @@ class DepartmentService implements DepartmentServiceInterface
             $departmentData = $this->departmentRepository->update($id, $department);
             DB::commit();
             return $departmentData;
+        } catch (ModelNotFoundException $exception) {
+            throw new ModelNotFoundException($exception->getMessage());
         } catch (Throwable $exception) {
             DB::rollBack();
             Log::error('update department service : ' . $exception->getMessage());
