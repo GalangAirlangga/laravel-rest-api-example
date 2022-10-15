@@ -163,6 +163,108 @@ class DepartmentTest extends TestCase
         ]);
     }
 
+    public function testUpdateDataRequiredName(): void
+    {
+        Sanctum::actingAs(
+            User::factory()->create(),
+            ['department-edit']
+        );
+        $department = (new Department)->create([
+            'name' => 'IT Support',
+            'description' => 'description'
+        ]);
+        $response = $this->putJson('/api/v1/departments/' . $department->id, [
+            'description' => 'description update',
+        ]);
+
+        $response->assertStatus(400)
+            ->assertJson([
+                'success' => false,
+                'errors' => [
+                    'name' => [
+                        "The name field is required."
+                    ]
+                ],
+                'message' => "Validation error"
+            ]);
+    }
+
+    public function testUpdateNameOverValidation(): void
+    {
+        Sanctum::actingAs(
+            User::factory()->create(),
+            ['department-edit']
+        );
+        $department = (new Department)->create([
+            'name' => 'IT Support',
+            'description' => 'description'
+        ]);
+        $response = $this->putJson('/api/v1/departments/' . $department->id, [
+            'name' => Str::random(300),
+            'description' => 'description update',
+        ]);
+
+        $response->assertStatus(400)
+            ->assertJson([
+                'success' => false,
+                'errors' => [
+                    'name' => [
+                        "The name must not be greater than 255 characters."
+                    ]
+                ],
+                'message' => "Validation error"
+            ]);
+    }
+
+    public function testUpdateDataEmptyDescription(): void
+    {
+        Sanctum::actingAs(
+            User::factory()->create(),
+            ['department-edit']
+        );
+        $department = (new Department)->create([
+            'name' => 'IT Support',
+            'description' => 'description'
+        ]);
+        $response = $this->putJson('/api/v1/departments/' . $department->id, [
+            'name' => 'IT Supports',
+        ]);
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+                'data' => [
+                    'id' => $department->id,
+                    'name' => 'IT Supports',
+                    'description' => 'description',
+                ],
+                'message' => "successfully update department data"
+            ]);
+        $this->assertDatabaseHas('departments', [
+            'id' => $department->id,
+            'name' => 'IT Supports',
+            'description' => 'description',
+        ]);
+    }
+
+    public function testUpdateDataNotFound(): void
+    {
+        Sanctum::actingAs(
+            User::factory()->create(),
+            ['department-edit']
+        );
+        $response = $this->putJson('/api/v1/departments/213123', [
+            'name' => 'IT Supports',
+            'description' => 'description update',
+        ]);
+
+        $response->assertStatus(404)
+            ->assertJson([
+                'success' => false,
+                'message' => "department data not found"
+            ]);
+    }
+
     public function testShowData(): void
     {
         Sanctum::actingAs(
@@ -187,6 +289,21 @@ class DepartmentTest extends TestCase
             ]);
     }
 
+    public function testShowDataNotFound(): void
+    {
+        Sanctum::actingAs(
+            User::factory()->create(),
+            ['department-show']
+        );
+        $response = $this->getJson('/api/v1/departments/42424/show');
+
+        $response->assertStatus(404)
+            ->assertJson([
+                'success' => false,
+                'message' => "department data not found"
+            ]);
+    }
+
     public function testDeleteData(): void
     {
         Sanctum::actingAs(
@@ -206,5 +323,20 @@ class DepartmentTest extends TestCase
                 'message' => "successfully delete department data"
             ]);
         $this->assertSoftDeleted($department);
+    }
+
+    public function testDeleteDataNotFound(): void
+    {
+        Sanctum::actingAs(
+            User::factory()->create(),
+            ['department-delete']
+        );
+        $response = $this->deleteJson('/api/v1/departments/12121');
+
+        $response->assertStatus(404)
+            ->assertJson([
+                'success' => false,
+                'message' => "department data not found"
+            ]);
     }
 }
