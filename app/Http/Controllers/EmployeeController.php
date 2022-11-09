@@ -6,7 +6,6 @@ use App\Http\Requests\Employee\CreateRequest;
 use App\Http\Requests\Employee\UpdateRequest;
 use App\Services\Employee\EmployeeServiceInterface;
 use App\Traits\RespondsWithHttpStatus;
-use Cache;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -29,10 +28,8 @@ class EmployeeController extends Controller
     public function index(): Response|Application|ResponseFactory
     {
         try {
-            $employee = Cache::remember('employee-all', 60, function () {
-                return $this->employeeService->all();
-            });
-            return $this->successWithPaginate('data all employee', $employee);
+            $employees = $this->employeeService->all();
+            return $this->successWithPaginate('data all employee', $employees);
         } catch (InvalidSortQuery $exception) {
             return $this->failure($exception->getMessage(), 400);
         } catch (Throwable $exception) {

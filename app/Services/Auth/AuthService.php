@@ -24,6 +24,7 @@ class AuthService implements AuthServiceInterface
      * if user have token, token will delete and generate new token
      * @param $auth
      * @return array
+     * @throws Throwable
      */
     public function login($auth): array
     {
@@ -54,7 +55,7 @@ class AuthService implements AuthServiceInterface
                 'employee' => $this->authRepository->abilityEmployee()
             };
             //create token
-            $token = $authUser->createToken('MyAuthApp',$ability)->plainTextToken;
+            $token = $authUser->createToken('MyAuthApp', $ability)->plainTextToken;
 
             DB::commit();
             return [
@@ -76,6 +77,7 @@ class AuthService implements AuthServiceInterface
      * this function to log out and delete token
      * @param $auth
      * @return bool
+     * @throws Throwable
      */
     public function logout($auth): bool
     {
