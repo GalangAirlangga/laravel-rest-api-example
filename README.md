@@ -1,5 +1,7 @@
 ## This Example Rest API
 
+[![Actions Status](https://github.com/GalangAirlangga/laravel-rest-api-example/workflows/Laravel/badge.svg)](https://github.com/GalangAirlangga/laravel-rest-api-example/actions)
+
 ### Package
 
 1. laravel/sanctum
